@@ -1,0 +1,9 @@
+.list {
+  overflow: auto;
+  height: calc(100vh - 145px);
+  /*height: calc(100vh - 133px);*/
+}
+.progress {
+  height: 19px;
+}
+

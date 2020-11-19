@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuehai.learn.english.mapper.UserRoleMapper">
+    <resultMap id="roleResultMap" type="com.yuehai.learn.english.entity.RoleEntity">
+        <result column="uid" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="selectRoleByUserId" resultType="com.yuehai.learn.english.entity.RoleEntity">
+        select r.uid, r.name, r.code
+        from learn_english.tb_role r,
+             learn_english.tb_user_role u_r
+        where u_r.user_id = #{value}
+          and u_r.role_code =
+              r.code
+    </select>
+
+    <insert id="insertUserRole">
+        insert into learn_english.tb_user_role(user_id, role_code)
+        values (#{userId}, #{roleCode})
+    </insert>
+
+    <update id="updateUserRole" parameterType="Long">
+        update learn_english.tb_user_role
+        <set>
+            <if test="roleCode != null">
+                roleCode=#{roleCode}
+            </if>
+        </set>
+        where user_id = #{value}
+    </update>
+</mapper>
