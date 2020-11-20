@@ -21,4 +21,5 @@ interface WordService {
     fun insertExtraWord(wordExtraBean: WordExtraBean): ResultBean
     fun selectExtraWords(wordId: Long): ResultBean
     fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int): ResultBean
+    fun selectWordLearnRecords(userPhone: String): ResultBean
 }

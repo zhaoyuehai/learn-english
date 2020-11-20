@@ -3,11 +3,14 @@
 <mapper namespace="com.yuehai.learn.english.mapper.WordMarkMapper">
 
     <resultMap id="wordMarkResultMap" type="com.yuehai.learn.english.entity.WordMarkEntity">
-        <result column="uid" property="id" jdbcType="BIGINT"/>
+        <id column="uid" property="id"/>
         <result column="user_phone" property="userPhone" jdbcType="VARCHAR"/>
+        <result column="word_id" property="wordId" jdbcType="BIGINT"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="mark_count" property="markCount" jdbcType="INTEGER"/>
+        <result column="content_en" property="contentEN" jdbcType="VARCHAR"/>
+        <result column="content_cn" property="contentCN" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="selectWordMarkSql">
@@ -21,9 +24,18 @@
     </select>
 
     <select id="selectWordMarks" resultMap="wordMarkResultMap">
-        <include refid="selectWordMarkSql"/>
-        where user_phone = #{userPhone}
-        order by mark_count desc
+        select tb_user_word_mark.uid,
+               tb_user_word_mark.user_phone,
+               tb_user_word_mark.word_id,
+               tb_user_word_mark.create_time,
+               tb_user_word_mark.update_time,
+               tb_user_word_mark.mark_count,
+               tb_word.content_en,
+               tb_word.content_cn
+        from tb_user_word_mark
+                 inner join tb_word on tb_word.uid = tb_user_word_mark.word_id
+        where tb_user_word_mark.user_phone = #{userPhone}
+        order by tb_user_word_mark.mark_count desc
     </select>
 
     <insert id="insertWordMark">
@@ -51,4 +63,43 @@
             #{id}
         </foreach>
     </delete>
+
+    <!--tb_word_learn_time-->
+    <resultMap id="wordLearnResultMap" type="com.yuehai.learn.english.entity.WordLearnEntity">
+        <id column="id" property="id"/>
+        <result column="user_phone" property="userPhone" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectWordLearnRecords" resultMap="wordLearnResultMap">
+        select id,
+               user_phone,
+               create_time,
+               count
+        from tb_word_learn_record
+        where user_phone = #{userPhone}
+        order by create_time desc
+    </select>
+
+    <select id="selectWordLearnRecord" resultMap="wordLearnResultMap">
+        select id,
+               user_phone,
+               create_time,
+               count
+        from tb_word_learn_record
+        where user_phone = #{userPhone}
+          and date_format(create_time, '%Y-%m-%d') = date_format(#{createTime}, '%Y-%m-%d')
+    </select>
+
+    <insert id="insertWordLearnRecord">
+        insert into tb_word_learn_record(user_phone, count)
+        values (#{userPhone}, 1)
+    </insert>
+
+    <update id="updateWordLearnRecord">
+        update tb_word_learn_record
+        set count = #{count}
+        where id = #{id}
+    </update>
 </mapper>

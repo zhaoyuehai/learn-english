@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper
 import com.yuehai.learn.english.bean.*
 import com.yuehai.learn.english.entity.WordEntity
 import com.yuehai.learn.english.entity.WordExtraEntity
-import com.yuehai.learn.english.entity.WordMarkEntity
 import com.yuehai.learn.english.mapper.WordExtraMapper
 import com.yuehai.learn.english.mapper.WordMapper
 import com.yuehai.learn.english.mapper.WordMarkMapper
@@ -45,7 +44,7 @@ class WordServiceImpl : WordService {
     }
 
     override fun insertWord(wordBean: WordBean): ResultBean {
-        val entity = WordEntity(wordBean.contentEN, wordBean.contentCN, null, wordBean.createTime)
+        val entity = WordEntity(id = null, contentEN = wordBean.contentEN, contentCN = wordBean.contentCN, createTime = wordBean.createTime)
         val res = wordMapper.insertWord(entity)
         return if (res > 0) {
             ResultUtil.success(entity.id)
@@ -55,7 +54,7 @@ class WordServiceImpl : WordService {
     }
 
     override fun updateWord(wordBean: WordBean): ResultBean {
-        val res = wordMapper.updateWord(WordEntity(wordBean.contentEN, wordBean.contentCN, wordBean.id))
+        val res = wordMapper.updateWord(WordEntity(id = wordBean.id, contentEN = wordBean.contentEN, contentCN = wordBean.contentCN))
         return if (res > 0) {
             ResultUtil.success(res, "修改成功")
         } else {
@@ -137,12 +136,17 @@ class WordServiceImpl : WordService {
         } else {
             wordMarkMapper.insertWordMark(userPhone, wordMarkBean.wordId, if (wordMarkBean.markUp) 1 else 0)
         }
+        //学习记录+1
+        val learnTime = wordMarkMapper.selectWordLearnRecord(userPhone, Date())
+        if (learnTime != null) {
+            wordMarkMapper.updateWordLearnRecord(learnTime.id, learnTime.count + 1)
+        } else {
+            wordMarkMapper.insertWordLearnRecord(userPhone)
+        }
         return if (res > 0) ResultUtil.success() else ResultUtil.fail("操作失败")
     }
 
-    override fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int): ResultBean {
-        val page = PageHelper.startPage<WordMarkEntity>(pageNum, pageSize)
-        val list = wordMarkMapper.selectWordMarks(userPhone)
-        return ResultUtil.success(PageWrapperBean(page.total, page.pages, list))
-    }
+    override fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int) = ResultUtil.success(wordMarkMapper.selectWordMarks(userPhone))
+
+    override fun selectWordLearnRecords(userPhone: String) = ResultUtil.success(wordMarkMapper.selectWordLearnRecords(userPhone))
 }

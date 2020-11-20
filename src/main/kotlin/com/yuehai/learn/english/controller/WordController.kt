@@ -89,4 +89,16 @@ class WordController : BaseController() {
     @ApiImplicitParam(name = "id", value = "id", paramType = "path", dataType = "Integer", required = true)
     @GetMapping("expand/{id}")
     fun expandWords(@PathVariable("id") id: Long) = wordService.selectExtraWords(id)
+
+    @ApiOperation("获取学习次数记录", notes = "")
+    @GetMapping("learn/records")
+    fun learnRecords(): ResultBean {
+        val token = jwtUtil.getTokenFromRequest(request)
+        return if (token != null) {
+            val userPhone = jwtUtil.getSubFromToken(token)
+            wordService.selectWordLearnRecords(userPhone)
+        } else {
+            ResultUtil.fail(ErrorResult.LOGIN_INFO_ERROR)
+        }
+    }
 }
