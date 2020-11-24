@@ -70,7 +70,7 @@ class MockMonitorController : BaseController() {
     }
 
     fun getJsonFromFile(jsonFileName: String): String? {
-        val filePath = "${ApplicationHome().dir.path}/mock/monitor/$jsonFileName.json"
+        val filePath = "/mock/monitor/$jsonFileName.json"
         return JsonUtil.readJsonFile(filePath)
     }
 }
