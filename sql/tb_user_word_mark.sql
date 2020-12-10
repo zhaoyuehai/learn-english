@@ -42,3 +42,6 @@ INSERT INTO `tb_user_word_mark` VALUES (1, '18888888888', 43, '2020-10-22 17:11:
 INSERT INTO `tb_user_word_mark` VALUES (2, '18511073583', 14, '2020-10-23 11:16:00', '2020-10-26 14:10:46', 4);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+alter table tb_user_word_mark
+    add learn_count int default 1 null;

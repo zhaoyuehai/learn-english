@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper
 import com.yuehai.learn.english.bean.*
 import com.yuehai.learn.english.entity.WordEntity
 import com.yuehai.learn.english.entity.WordExtraEntity
+import com.yuehai.learn.english.entity.WordMarkEntity
 import com.yuehai.learn.english.mapper.WordExtraMapper
 import com.yuehai.learn.english.mapper.WordMapper
 import com.yuehai.learn.english.mapper.WordMarkMapper
@@ -131,8 +132,8 @@ class WordServiceImpl : WordService {
         val entity = wordMarkMapper.selectWordMark(userPhone, wordMarkBean.wordId)
         val res = if (entity != null) {
             var markCount = entity.markCount + (if (wordMarkBean.markUp) 1 else -1)
-            if (markCount < -10) markCount = -10 else if (markCount > 10) markCount == 10
-            wordMarkMapper.updateWordMark(entity.id, markCount)
+            if (markCount < 0) markCount = 0
+            wordMarkMapper.updateWordMark(entity.id, markCount, entity.learnCount + 1)
         } else {
             wordMarkMapper.insertWordMark(userPhone, wordMarkBean.wordId, if (wordMarkBean.markUp) 1 else 0)
         }
@@ -146,7 +147,10 @@ class WordServiceImpl : WordService {
         return if (res > 0) ResultUtil.success() else ResultUtil.fail("操作失败")
     }
 
-    override fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int) = ResultUtil.success(wordMarkMapper.selectWordMarks(userPhone))
+    override fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int): ResultBean {
+        PageHelper.startPage<WordMarkEntity>(pageNum, pageSize)
+        return ResultUtil.success(wordMarkMapper.selectWordMarks(userPhone))
+    }
 
     override fun selectWordLearnRecords(userPhone: String) = ResultUtil.success(wordMarkMapper.selectWordLearnRecords(userPhone))
 }

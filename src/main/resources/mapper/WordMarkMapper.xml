@@ -9,18 +9,25 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="mark_count" property="markCount" jdbcType="INTEGER"/>
+        <result column="learn_count" property="learnCount" jdbcType="INTEGER"/>
         <result column="content_en" property="contentEN" jdbcType="VARCHAR"/>
         <result column="content_cn" property="contentCN" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <sql id="selectWordMarkSql">
-        select uid, user_phone, word_id, create_time, update_time, mark_count
-        from tb_user_word_mark</sql>
-
     <select id="selectWordMark" resultMap="wordMarkResultMap">
-        <include refid="selectWordMarkSql"/>
-        where user_phone = #{userPhone}
-        and word_id = #{wordId}
+        select tb_user_word_mark.uid,
+               tb_user_word_mark.user_phone,
+               tb_user_word_mark.word_id,
+               tb_user_word_mark.create_time,
+               tb_user_word_mark.update_time,
+               tb_user_word_mark.mark_count,
+               tb_user_word_mark.learn_count,
+               tb_word.content_en,
+               tb_word.content_cn
+        from tb_user_word_mark
+                 inner join tb_word on tb_word.uid = tb_user_word_mark.word_id
+        where tb_user_word_mark.user_phone = #{userPhone}
+          and tb_user_word_mark.word_id = #{wordId}
     </select>
 
     <select id="selectWordMarks" resultMap="wordMarkResultMap">
@@ -30,22 +37,25 @@
                tb_user_word_mark.create_time,
                tb_user_word_mark.update_time,
                tb_user_word_mark.mark_count,
+               tb_user_word_mark.learn_count,
                tb_word.content_en,
                tb_word.content_cn
         from tb_user_word_mark
                  inner join tb_word on tb_word.uid = tb_user_word_mark.word_id
         where tb_user_word_mark.user_phone = #{userPhone}
+          and tb_user_word_mark.mark_count > 0
         order by tb_user_word_mark.mark_count desc
     </select>
 
     <insert id="insertWordMark">
-        insert into tb_user_word_mark(user_phone, word_id, mark_count)
-        values (#{userPhone}, #{wordId}, #{markCount})
+        insert into tb_user_word_mark(user_phone, word_id, mark_count, learn_count)
+        values (#{userPhone}, #{wordId}, #{markCount}, 1)
     </insert>
 
     <update id="updateWordMark">
         update tb_user_word_mark
-        set mark_count = #{markCount}
+        set mark_count  = #{markCount},
+            learn_count = #{learnCount}
         where uid = #{id}
     </update>
 
