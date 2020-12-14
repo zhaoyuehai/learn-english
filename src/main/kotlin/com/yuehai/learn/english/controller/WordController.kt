@@ -50,7 +50,7 @@ class WordController : BaseController() {
             ApiImplicitParam(name = "pageSize", value = "每页数量", paramType = "path", dataType = "String", required = true),
             ApiImplicitParam(name = "date", value = "日期条件【格式：yyyy-MM】", paramType = "path", dataType = "String", required = false)
     )
-    @GetMapping("words/{pageNum}/{pageSize}/{date}")
+    @GetMapping("words/{pageNum}/{pageSize}", "words/{pageNum}/{pageSize}/{date}")
     fun words(@PathVariable pageNum: Int, @PathVariable pageSize: Int, @PathVariable(required = false) date: String?) = wordService.selectWord(date, pageNum, pageSize)
 
     @ApiOperation("随机获取单词", notes = "count可以不传，默认1")
@@ -70,12 +70,12 @@ class WordController : BaseController() {
         }
     }
 
-    @GetMapping("marks/{pageNum}/{pageSize}")
-    fun wordMarks(@PathVariable pageNum: Int, @PathVariable pageSize: Int): ResultBean {
+    @GetMapping("marks/{pageNum}/{pageSize}", "marks/{pageNum}/{pageSize}/{date}")
+    fun wordMarks(@PathVariable pageNum: Int, @PathVariable pageSize: Int, @PathVariable(required = false) date: String?): ResultBean {
         val token = jwtUtil.getTokenFromRequest(request)
         return if (token != null) {
             val userPhone = jwtUtil.getSubFromToken(token)
-            wordService.selectWordMarks(userPhone, pageNum, pageSize)
+            wordService.selectWordMarks(userPhone, pageNum, pageSize, date)
         } else {
             ResultUtil.fail(ErrorResult.LOGIN_INFO_ERROR)
         }

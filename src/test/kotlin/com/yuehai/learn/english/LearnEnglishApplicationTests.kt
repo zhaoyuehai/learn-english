@@ -5,6 +5,7 @@ import com.yuehai.learn.english.mapper.WordMarkMapper
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.text.SimpleDateFormat
 
 @SpringBootTest
 class LearnEnglishApplicationTests {
@@ -25,8 +26,15 @@ class LearnEnglishApplicationTests {
 //        println("------$res")
 //        val basePath =  ApplicationHome().dir.path
 //        println("------$basePath")
-        val res = wordMarkMapper.selectWordMarks("18888888888")
-        print(res)
+//        wordMarkMapper.selectWordMarks("18511073583").forEach { word ->
+//            if (word.wordCreateTime == null) {
+//                val wordEntity = wordMapper.selectWordById(word.wordId)
+//                wordEntity?.createTime?.let {
+//                    val res = wordMarkMapper.updateWordCreateTime(word.id, SimpleDateFormat("yyyy-MM-dd").parse(it))
+//                    print("${word.wordId}------$res")
+//                }
+//            }
+//        }
     }
 
 }

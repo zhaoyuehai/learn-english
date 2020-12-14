@@ -6,9 +6,9 @@ import org.apache.ibatis.annotations.Param
 import java.util.*
 
 interface WordMarkMapper {
-    fun selectWordMarks(@Param("userPhone") userPhone: String): List<WordMarkEntity>
+    fun selectWordMarks(@Param("userPhone") userPhone: String, @Param("year") year: String?, @Param("month") month: String?): List<WordMarkEntity>
     fun selectWordMark(@Param("userPhone") userPhone: String, @Param("wordId") wordId: Long): WordMarkEntity?
-    fun insertWordMark(@Param("userPhone") userPhone: String, @Param("wordId") wordId: Long, @Param("markCount") markCount: Int): Int
+    fun insertWordMark(@Param("userPhone") userPhone: String, @Param("wordId") wordId: Long, @Param("wordCreateTime") wordCreateTime: Date, @Param("markCount") markCount: Int): Int
     fun updateWordMark(@Param("id") id: Long, @Param("markCount") markCount: Int, @Param("learnCount") learnCount: Int): Int
     fun deleteWordMarkByWordId(id: Long)
     fun deleteWordMarkByWordIds(id: LongArray)
@@ -16,4 +16,5 @@ interface WordMarkMapper {
     fun selectWordLearnRecord(@Param("userPhone") userPhone: String, @Param("createTime") createTime: Date): WordLearnEntity?
     fun insertWordLearnRecord(@Param("userPhone", ) userPhone: String): Int
     fun updateWordLearnRecord(@Param("id") id: Long, @Param("count") count: Int): Int
+//    fun updateWordCreateTime(@Param("id") id: Long, @Param("wordCreateTime") wordCreateTime: Date): Int
 }

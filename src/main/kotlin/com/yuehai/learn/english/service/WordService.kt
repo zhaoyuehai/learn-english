@@ -20,6 +20,6 @@ interface WordService {
     fun deleteWords(ids: LongArray): ResultBean
     fun insertExtraWord(wordExtraBean: WordExtraBean): ResultBean
     fun selectExtraWords(wordId: Long): ResultBean
-    fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int): ResultBean
+    fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int, date: String?): ResultBean
     fun selectWordLearnRecords(userPhone: String): ResultBean
 }

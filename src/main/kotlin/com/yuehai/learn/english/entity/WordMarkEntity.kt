@@ -5,6 +5,7 @@ import java.sql.Timestamp
 data class WordMarkEntity(val id: Long,
                           val userPhone: String,
                           val wordId: Long,
+                          val wordCreateTime: Timestamp?,
                           val createTime: Timestamp?,
                           val updateTime: Timestamp?,
                           val markCount: Int,

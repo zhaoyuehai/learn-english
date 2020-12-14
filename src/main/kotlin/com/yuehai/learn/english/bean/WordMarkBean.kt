@@ -6,4 +6,6 @@ import io.swagger.annotations.ApiModelProperty
 @ApiModel
 data class WordMarkBean(
         @ApiModelProperty("wordId") val wordId: Long,
-        @ApiModelProperty("markUp") val markUp: Boolean)
+        @ApiModelProperty("markUp") val markUp: Boolean,
+        @ApiModelProperty("createTime") val createTime: String
+        )

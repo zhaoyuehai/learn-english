@@ -6,6 +6,7 @@
         <id column="uid" property="id"/>
         <result column="user_phone" property="userPhone" jdbcType="VARCHAR"/>
         <result column="word_id" property="wordId" jdbcType="BIGINT"/>
+        <result column="word_create_time" property="wordCreateTime" jdbcType="TIMESTAMP"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="mark_count" property="markCount" jdbcType="INTEGER"/>
@@ -18,6 +19,7 @@
         select tb_user_word_mark.uid,
                tb_user_word_mark.user_phone,
                tb_user_word_mark.word_id,
+               tb_user_word_mark.word_create_time,
                tb_user_word_mark.create_time,
                tb_user_word_mark.update_time,
                tb_user_word_mark.mark_count,
@@ -32,24 +34,29 @@
 
     <select id="selectWordMarks" resultMap="wordMarkResultMap">
         select tb_user_word_mark.uid,
-               tb_user_word_mark.user_phone,
-               tb_user_word_mark.word_id,
-               tb_user_word_mark.create_time,
-               tb_user_word_mark.update_time,
-               tb_user_word_mark.mark_count,
-               tb_user_word_mark.learn_count,
-               tb_word.content_en,
-               tb_word.content_cn
+        tb_user_word_mark.user_phone,
+        tb_user_word_mark.word_id,
+        tb_user_word_mark.word_create_time,
+        tb_user_word_mark.create_time,
+        tb_user_word_mark.update_time,
+        tb_user_word_mark.mark_count,
+        tb_user_word_mark.learn_count,
+        tb_word.content_en,
+        tb_word.content_cn
         from tb_user_word_mark
-                 inner join tb_word on tb_word.uid = tb_user_word_mark.word_id
+        inner join tb_word on tb_word.uid = tb_user_word_mark.word_id
         where tb_user_word_mark.user_phone = #{userPhone}
-          and tb_user_word_mark.mark_count > 0
+        and tb_user_word_mark.mark_count > 0
+        <if test="year!=null and month!=null">
+            and year(tb_user_word_mark.word_create_time) = #{year} and month(tb_user_word_mark.word_create_time) =
+            #{month}
+        </if>
         order by tb_user_word_mark.mark_count desc
     </select>
 
     <insert id="insertWordMark">
-        insert into tb_user_word_mark(user_phone, word_id, mark_count, learn_count)
-        values (#{userPhone}, #{wordId}, #{markCount}, 1)
+        insert into tb_user_word_mark(user_phone, word_id, word_create_time, mark_count, learn_count)
+        values (#{userPhone}, #{wordId}, #{wordCreateTime}, #{markCount}, 1)
     </insert>
 
     <update id="updateWordMark">
@@ -58,6 +65,12 @@
             learn_count = #{learnCount}
         where uid = #{id}
     </update>
+
+    <!--    <update id="updateWordCreateTime">-->
+    <!--        update tb_user_word_mark-->
+    <!--        set word_create_time  = #{wordCreateTime}-->
+    <!--        where uid = #{id}-->
+    <!--    </update>-->
 
     <delete id="deleteWordMarkByWordId">
         delete

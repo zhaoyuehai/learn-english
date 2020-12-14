@@ -21,14 +21,11 @@
                type
         from tb_word</sql>
 
-    <select id="selectWord" resultMap="wordResultMap">
+    <select id="selectWords" resultMap="wordResultMap">
         <include refid="selectWordSql"/>
-        order by uid
-    </select>
-
-    <select id="selectWordLimitDate" resultMap="wordResultMap">
-        <include refid="selectWordSql"/>
-        where year(create_time) = #{year} and month(create_time) = #{month}
+        <if test="year!=null and month!=null">
+            where year(create_time) = #{year} and month(create_time) =#{month}
+        </if>
         order by uid
     </select>
 

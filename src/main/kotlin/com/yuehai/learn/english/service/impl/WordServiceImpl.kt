@@ -38,7 +38,7 @@ class WordServiceImpl : WordService {
             month = array[1]
         }
         val list = mutableListOf<WordBean>()
-        if (year.isNullOrEmpty() || month.isNullOrEmpty()) wordMapper.selectWord() else wordMapper.selectWordLimitDate(year, month).forEach {
+        wordMapper.selectWords(year, month).forEach {
             if (it.id != null && it.createTime != null) list.add(WordBean(it.id, it.contentEN, it.contentCN, it.createTime.substring(0, 10)))
         }
         return ResultUtil.success(PageWrapperBean(page.total, page.pages, list))
@@ -135,7 +135,7 @@ class WordServiceImpl : WordService {
             if (markCount < 0) markCount = 0
             wordMarkMapper.updateWordMark(entity.id, markCount, entity.learnCount + 1)
         } else {
-            wordMarkMapper.insertWordMark(userPhone, wordMarkBean.wordId, if (wordMarkBean.markUp) 1 else 0)
+            wordMarkMapper.insertWordMark(userPhone, wordMarkBean.wordId, SimpleDateFormat("yyyy-MM-dd").parse(wordMarkBean.createTime), if (wordMarkBean.markUp) 1 else 0)
         }
         //学习记录+1
         val learnTime = wordMarkMapper.selectWordLearnRecord(userPhone, Date())
@@ -147,9 +147,17 @@ class WordServiceImpl : WordService {
         return if (res > 0) ResultUtil.success() else ResultUtil.fail("操作失败")
     }
 
-    override fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int): ResultBean {
-        PageHelper.startPage<WordMarkEntity>(pageNum, pageSize)
-        return ResultUtil.success(wordMarkMapper.selectWordMarks(userPhone))
+    override fun selectWordMarks(userPhone: String, pageNum: Int, pageSize: Int, date: String?): ResultBean {
+        val page = PageHelper.startPage<WordMarkEntity>(pageNum, pageSize)
+        var year: String? = null
+        var month: String? = null
+        if (date != null && date.contains("-")) {
+            val array = date.split("-")
+            year = array[0]
+            month = array[1]
+        }
+        val list = wordMarkMapper.selectWordMarks(userPhone, year, month)
+        return ResultUtil.success(PageWrapperBean(page.total, page.pages, list))
     }
 
     override fun selectWordLearnRecords(userPhone: String) = ResultUtil.success(wordMarkMapper.selectWordLearnRecords(userPhone))
