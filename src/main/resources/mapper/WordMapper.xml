@@ -54,16 +54,24 @@
         order by rand() limit #{count}
     </select>
 
+    <!--contentCN和createTime是选填的-->
     <insert id="insertWord" parameterType="com.yuehai.learn.english.entity.WordEntity">
         <selectKey keyProperty="id" resultType="java.lang.Long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into tb_word(content_en
-        <if test="contentCN !=null and contentCN !=''">,content_cn</if>
-        <if test="createTime!=null">,create_time</if>)
-        values(#{contentEN}
-        <if test="contentCN !=null and contentCN !=''">,#{contentCN}</if>
-        <if test="createTime!=null">,#{createTime}</if>)
+        <choose>
+            <when test="contentCN !=null and createTime!=null">
+                ,content_cn,create_time) values (#{contentEN},#{contentCN},#{createTime})
+            </when>
+            <when test="contentCN !=null">
+                ,content_cn) values (#{contentEN},#{contentCN})
+            </when>
+            <when test="createTime!=null">
+                ,create_time) values(#{contentEN},#{createTime})
+            </when>
+            <otherwise>) values(#{contentEN})</otherwise>
+        </choose>
     </insert>
 
     <update id="updateWord" parameterType="com.yuehai.learn.english.entity.WordEntity">

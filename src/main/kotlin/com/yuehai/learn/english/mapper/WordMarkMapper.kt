@@ -8,7 +8,7 @@ import java.util.*
 interface WordMarkMapper {
     fun selectWordMarks(@Param("userPhone") userPhone: String, @Param("year") year: String?, @Param("month") month: String?): List<WordMarkEntity>
     fun selectWordMark(@Param("userPhone") userPhone: String, @Param("wordId") wordId: Long): WordMarkEntity?
-    fun insertWordMark(@Param("userPhone") userPhone: String, @Param("wordId") wordId: Long, @Param("wordCreateTime") wordCreateTime: Date, @Param("markCount") markCount: Int): Int
+    fun insertWordMark(@Param("userPhone") userPhone: String, @Param("wordId") wordId: Long, @Param("wordCreateTime") wordCreateTime: String, @Param("markCount") markCount: Int): Int
     fun updateWordMark(@Param("id") id: Long, @Param("markCount") markCount: Int, @Param("learnCount") learnCount: Int): Int
     fun deleteWordMarkByWordId(id: Long)
     fun deleteWordMarkByWordIds(id: LongArray)

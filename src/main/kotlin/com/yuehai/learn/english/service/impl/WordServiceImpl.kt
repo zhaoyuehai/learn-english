@@ -135,7 +135,7 @@ class WordServiceImpl : WordService {
             if (markCount < 0) markCount = 0
             wordMarkMapper.updateWordMark(entity.id, markCount, entity.learnCount + 1)
         } else {
-            wordMarkMapper.insertWordMark(userPhone, wordMarkBean.wordId, SimpleDateFormat("yyyy-MM-dd").parse(wordMarkBean.createTime), if (wordMarkBean.markUp) 1 else 0)
+            wordMarkMapper.insertWordMark(userPhone, wordMarkBean.wordId, wordMarkBean.createTime, if (wordMarkBean.markUp) 1 else 0)
         }
         //学习记录+1
         val learnTime = wordMarkMapper.selectWordLearnRecord(userPhone, Date())
