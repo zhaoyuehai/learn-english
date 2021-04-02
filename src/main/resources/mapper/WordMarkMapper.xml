@@ -66,11 +66,11 @@
         where uid = #{id}
     </update>
 
-    <!--    <update id="updateWordCreateTime">-->
-    <!--        update tb_user_word_mark-->
-    <!--        set word_create_time  = #{wordCreateTime}-->
-    <!--        where uid = #{id}-->
-    <!--    </update>-->
+        <update id="updateWordCreateTime">
+            update tb_user_word_mark
+            set word_create_time  = #{wordCreateTime}
+            where uid = #{id}
+        </update>
 
     <delete id="deleteWordMarkByWordId">
         delete

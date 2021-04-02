@@ -5,7 +5,6 @@ import com.yuehai.learn.english.mapper.WordMarkMapper
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.text.SimpleDateFormat
 
 @SpringBootTest
 class LearnEnglishApplicationTests {
@@ -26,15 +25,19 @@ class LearnEnglishApplicationTests {
 //        println("------$res")
 //        val basePath =  ApplicationHome().dir.path
 //        println("------$basePath")
-//        wordMarkMapper.selectWordMarks("18511073583").forEach { word ->
-//            if (word.wordCreateTime == null) {
-//                val wordEntity = wordMapper.selectWordById(word.wordId)
-//                wordEntity?.createTime?.let {
-//                    val res = wordMarkMapper.updateWordCreateTime(word.id, SimpleDateFormat("yyyy-MM-dd").parse(it))
-//                    print("${word.wordId}------$res")
-//                }
-//            }
+        wordMarkMapper.selectWordMarks("18888888888", "2020", "06").forEach { word ->
+            word.wordCreateTime?.let { time1 ->
+                if (time1.toString() == "2020-07-01 00:00:00.0") {
+//                    println("------$word")
+                    val wordEntity = wordMapper.selectWordById(word.wordId)
+                    wordEntity?.createTime?.let { time2 ->
+                        val res = wordMarkMapper.updateWordCreateTime(word.id, time2)
+                        print("${word.wordId}------$res")
+                    }
+                }
+            }
 //        }
+        }
     }
 
 }

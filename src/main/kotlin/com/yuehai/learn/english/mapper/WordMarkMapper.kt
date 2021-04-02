@@ -16,5 +16,5 @@ interface WordMarkMapper {
     fun selectWordLearnRecord(@Param("userPhone") userPhone: String, @Param("createTime") createTime: Date): WordLearnEntity?
     fun insertWordLearnRecord(@Param("userPhone", ) userPhone: String): Int
     fun updateWordLearnRecord(@Param("id") id: Long, @Param("count") count: Int): Int
-//    fun updateWordCreateTime(@Param("id") id: Long, @Param("wordCreateTime") wordCreateTime: Date): Int
+    fun updateWordCreateTime(@Param("id") id: Long, @Param("wordCreateTime") wordCreateTime: String): Int
 }
